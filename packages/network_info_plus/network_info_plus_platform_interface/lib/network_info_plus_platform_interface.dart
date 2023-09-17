@@ -53,6 +53,11 @@ abstract class NetworkInfoPlatform extends PlatformInterface {
     throw UnimplementedError('getWifiIP() has not been implemented.');
   }
 
+  /// Obtains the IP v4 address of the connected cellular network
+  Future<String?> getCellularIPAdress() {
+    throw UnimplementedError('getCellularIPAdress() has not been implemented.');
+  }
+
   /// Obtains the IP v6 address of the connected wifi network
   Future<String?> getWifiIPv6() {
     throw UnimplementedError('getWifiIPv6() has not been implemented.');

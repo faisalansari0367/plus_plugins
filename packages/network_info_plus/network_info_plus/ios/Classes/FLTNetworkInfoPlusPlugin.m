@@ -164,8 +164,11 @@
                             result([weakSelf
                                 convertCLAuthorizationStatusToString:status]);
                           }];
-  } else {
-    result(FlutterMethodNotImplemented);
+  } else if([call.method
+                 isEqualToString:@"getCellularIPAddress"]) {
+    result([self getCellularIPAddress]);              
+    } else {
+    result([self getCellularIPAddress]);
   }
 }
 
@@ -204,6 +207,48 @@
 
   // Free memory
   freeifaddrs(interfaces);
+}
+
+
+- (NSString *)getCellularIPAddress {
+    NSString *address = @"0.0.0.0"; // Default IP address
+    
+    // Declare variables for storing network interface information
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    
+    // Get a list of all network interfaces on the device
+    if (getifaddrs(&interfaces) == 0) {
+        temp_addr = interfaces;
+        
+        // Loop through the list of network interfaces
+        while (temp_addr != NULL) {
+            if (temp_addr->ifa_addr->sa_family == AF_INET) {
+                // Check if the interface is of IPv4 family
+                
+                // Get the name of the network interface
+                NSString *interfaceName = [NSString stringWithUTF8String:temp_addr->ifa_name];
+                
+                // Check if the network interface is "pdp_ip0" (cellular data)
+                if ([interfaceName isEqualToString:@"pdp_ip0"]) {
+                    // Extract the IPv4 address associated with the cellular interface
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                    
+                    // Stop when the first IPv4 address is found on the cellular interface
+                    break;
+                }
+            }
+            
+            // Move to the next network interface in the list
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    
+    // Free the memory allocated for the list of network interfaces
+    freeifaddrs(interfaces);
+    
+    // Return the obtained IP address (either cellular or default)
+    return address;
 }
 
 - (NSString *)descriptionForAddress:(struct sockaddr *)addr {

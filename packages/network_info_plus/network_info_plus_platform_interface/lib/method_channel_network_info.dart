@@ -4,9 +4,9 @@
 
 import 'dart:async';
 
-import 'package:network_info_plus_platform_interface/network_info_plus_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+import 'package:network_info_plus_platform_interface/network_info_plus_platform_interface.dart';
 
 import 'src/utils.dart';
 
@@ -27,6 +27,13 @@ class MethodChannelNetworkInfo extends NetworkInfoPlatform {
     }
     return wifiName;
   }
+
+    /// Obtains the IP v4 address of the connected cellular network
+  @override
+  Future<String?> getCellularIPAdress() {
+    return methodChannel.invokeMethod<String>('getCellularIPAdress');
+  }
+  
 
   @override
   Future<String?> getWifiBSSID() {

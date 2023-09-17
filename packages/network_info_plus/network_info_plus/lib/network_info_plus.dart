@@ -63,6 +63,11 @@ class NetworkInfo {
   Future<String?> getWifiIP() {
     return _platform.getWifiIP();
   }
+  
+  /// Obtains the IPv4 address of the connected wifi network
+  Future<String?> getCellularIPAdress() {
+    return _platform.getCellularIPAdress();
+  }
 
   /// Obtains the IPv6 address of the connected wifi network
   Future<String?> getWifiIPv6() {

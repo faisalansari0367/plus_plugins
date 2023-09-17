@@ -94,11 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
         wifiIPv6,
         wifiGatewayIP,
         wifiBroadcast,
+        cellularIp,
         wifiSubmask;
 
     try {
       if (!kIsWeb && Platform.isIOS) {
         // ignore: deprecated_member_use
+
         var status = await _networkInfo.getLocationServiceAuthorization();
         if (status == LocationAuthorizationStatus.notDetermined) {
           // ignore: deprecated_member_use
@@ -135,6 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         wifiBSSID = await _networkInfo.getWifiBSSID();
       }
+      cellularIp = await _networkInfo.getCellularIPAdress();
+      print(cellularIp);
     } on PlatformException catch (e) {
       developer.log('Failed to get Wifi BSSID', error: e);
       wifiBSSID = 'Failed to get Wifi BSSID';
